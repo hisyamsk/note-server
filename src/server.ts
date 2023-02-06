@@ -1,10 +1,13 @@
 import express, { Express, Request, Response } from 'express';
 import path from 'path';
+import { loggerMiddleware } from './middleware/logger';
+
 import rootRouter from './routes/root.router';
 
 const PORT: number = 8000;
 const app: Express = express();
 
+app.use(loggerMiddleware);
 app.use(express.json());
 app.use('/', express.static(path.join(__dirname, '..', 'public')));
 app.use('/', rootRouter);

@@ -1,14 +1,21 @@
 import express, { Express, Request, Response } from 'express';
 import path from 'path';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+
 import { loggerMiddleware } from './middleware/logger';
+import errorHandlerMiddleware from './middleware/errorHandler';
 
 import rootRouter from './routes/root.router';
+import corsOptions from '../config/corsOptions';
 
 const PORT: number = 8000;
 const app: Express = express();
 
 app.use(loggerMiddleware);
 app.use(express.json());
+app.use(cookieParser());
+app.use(cors(corsOptions));
 app.use('/', express.static(path.join(__dirname, '..', 'public')));
 app.use('/', rootRouter);
 
@@ -21,6 +28,8 @@ app.all('*', (req: Request, res: Response) => {
   }
   return res.send('404 Not Found');
 });
+
+app.use(errorHandlerMiddleware);
 
 app.listen(PORT, () => {
   console.log('listening on port 8000');

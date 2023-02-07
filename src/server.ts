@@ -2,19 +2,14 @@ import express, { Express, Request, Response } from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import dotenv from 'dotenv';
-import mongoose from 'mongoose';
 
 import { loggerMiddleware } from './middleware/logger';
 import errorHandlerMiddleware from './middleware/errorHandler';
 
 import rootRouter from './routes/root.router';
 import corsOptions from '../config/corsOptions';
+import connectServer from './utils/connect';
 
-dotenv.config();
-
-const PORT = process.env.PORT || 8000;
-const MONGODB_URI = process.env.MONGODB_URI || '';
 const app: Express = express();
 
 app.use(loggerMiddleware);
@@ -36,12 +31,4 @@ app.all('*', (req: Request, res: Response) => {
 
 app.use(errorHandlerMiddleware);
 
-app.listen(PORT, async () => {
-  try {
-    await mongoose.connect(MONGODB_URI);
-    console.log('connected to MongoDB');
-    console.log(`listening on PORT:${PORT}`);
-  } catch (err) {
-    console.log(err);
-  }
-});
+connectServer(app);

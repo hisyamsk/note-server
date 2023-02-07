@@ -9,6 +9,7 @@ import errorHandlerMiddleware from './middleware/errorHandler';
 import rootRouter from './routes/root.router';
 import corsOptions from '../config/corsOptions';
 import connectServer from './utils/connect';
+import apiRouter from './routes/api/api.router';
 
 const app: Express = express();
 
@@ -18,6 +19,7 @@ app.use(cookieParser());
 app.use(cors(corsOptions));
 app.use('/', express.static(path.join(__dirname, '..', 'public')));
 app.use('/', rootRouter);
+app.use('/api', apiRouter);
 
 app.all('*', (req: Request, res: Response) => {
   res.status(404);

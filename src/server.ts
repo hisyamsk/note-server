@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import dotenv from 'dotenv';
 
 import { loggerMiddleware } from './middleware/logger';
 import errorHandlerMiddleware from './middleware/errorHandler';
@@ -9,7 +10,9 @@ import errorHandlerMiddleware from './middleware/errorHandler';
 import rootRouter from './routes/root.router';
 import corsOptions from '../config/corsOptions';
 
-const PORT: number = 8000;
+dotenv.config();
+
+const PORT = process.env.PORT || 8000;
 const app: Express = express();
 
 app.use(loggerMiddleware);
@@ -32,5 +35,5 @@ app.all('*', (req: Request, res: Response) => {
 app.use(errorHandlerMiddleware);
 
 app.listen(PORT, () => {
-  console.log('listening on port 8000');
+  console.log(`listening on PORT:${PORT}`);
 });

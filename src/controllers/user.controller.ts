@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import { StatusCodes } from 'http-status-codes';
 
 import { IUserResponse } from '../interface/model.interface';
-import { createNewUser, getAllUsers } from '../service/user.service';
+import { createNewUser, findUser, getAllUsers } from '../service/user.service';
 import { CreateUserInput } from '../schema/user.schema';
 
 // @desc Get all users
@@ -22,14 +22,13 @@ export const getAllUsersHandler = asyncHandler(
 // @access Private
 export const createNewUserHandler = asyncHandler(
   async (req: Request<{}, {}, CreateUserInput['body']>, res: Response) => {
-    const newUser = await createNewUser({ ...req.body });
-
-    if (!newUser) {
-      res.status(StatusCodes.CONFLICT).json({
-        message: 'Username already exist',
-      });
-      return;
+    const isUserExist = await findUser(req.body.username)
+    if (isUserExist) {
+      res.status(StatusCodes.CONFLICT).json({ message: 'Username already exist' })
+      return
     }
+
+    const newUser = await createNewUser({...req.body})
 
     res.status(StatusCodes.CREATED).json(newUser);
   }

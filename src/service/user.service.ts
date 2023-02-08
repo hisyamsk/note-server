@@ -11,15 +11,15 @@ export async function getAllUsers() {
   return users;
 }
 
-export async function createNewUser(input: DocumentDefinition<IUserModel>) {
-  const duplicate = await UserModel.findOne({ username: input.username })
+export async function findUser(username: string) {
+  const user = await UserModel.findOne({ username })
     .lean<IUserResponse>()
     .exec();
 
-  if (duplicate) {
-    return false;
-  }
+  return user;
+}
 
+export async function createNewUser(input: DocumentDefinition<IUserModel>) {
   const salt: string = await bcrypt.genSalt(10);
   const hashedPassword: string = await bcrypt.hash(input.password, salt);
 

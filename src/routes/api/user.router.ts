@@ -1,18 +1,18 @@
 import express from 'express';
 import {
-  getAllUsers,
-  createNewUser,
-  updateUser,
-  deleteUser,
+  getAllUsersHandler,
+  updateUserHandler,
+  createNewUserHandler,
+  deleteUserHandler,
 } from '../../controllers/user.controller';
+import validateResource from '../../middleware/validateResource';
+import { createUserSchema } from '../../schema/user.schema';
 
 const userRouter = express.Router();
 
-userRouter
-  .route('/')
-  .get(getAllUsers)
-  .post(createNewUser)
-  .patch(updateUser)
-  .delete(deleteUser);
+userRouter.get('/', getAllUsersHandler);
+userRouter.post('/', validateResource(createUserSchema), createNewUserHandler);
+userRouter.patch('/', updateUserHandler);
+userRouter.delete('/', deleteUserHandler);
 
 export default userRouter;

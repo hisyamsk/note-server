@@ -1,10 +1,13 @@
 import mongoose from 'mongoose';
 
-export interface IUserModel {
+export interface IUserResponse {
   username: string;
-  password: string;
   roles: string[];
   active: boolean;
+}
+
+export interface IUserModel extends IUserResponse {
+  password: string;
 }
 
 export interface INoteModel {

@@ -79,7 +79,7 @@ export const updateUserHandler = asyncHandler(
     }
     const updatedUser = await updateUser({ _id: id }, body);
 
-    res.json(StatusCodes.CREATED).json(updatedUser);
+    res.status(StatusCodes.CREATED).json(updatedUser);
   }
 );
 

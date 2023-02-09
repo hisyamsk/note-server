@@ -39,7 +39,10 @@ export async function updateUser(
   update: UpdateQuery<IUserInput>,
   options: QueryOptions = { new: true }
 ) {
-  const updatedUser = await UserModel.findOneAndUpdate(query, update, options);
+  const updatedUser = await UserModel.findOneAndUpdate(query, update, options)
+    .select('-password')
+    .lean()
+    .exec();
 
   return updatedUser;
 }

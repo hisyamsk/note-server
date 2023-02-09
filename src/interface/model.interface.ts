@@ -1,17 +1,22 @@
 import mongoose from 'mongoose';
 
-export interface IUserResponse {
+export interface IUserInput {
   username: string;
   roles: string[];
   active: boolean;
+  password?: string;
 }
 
-export interface IUserModel extends IUserResponse {
+export interface IUserDocument extends IUserInput {
+  _id: mongoose.Schema.Types.ObjectId;
+}
+
+export interface IUserModel extends IUserInput {
   password: string;
 }
 
 export interface INoteModel {
-  user: mongoose.Schema.Types.ObjectId;
+  user: IUserDocument['_id'];
   title: string;
   text: string;
   completed: boolean;

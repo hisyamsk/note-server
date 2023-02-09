@@ -1,32 +1,45 @@
-import { DocumentDefinition } from 'mongoose';
-import bcrypt from 'bcrypt';
-import { IUserModel, IUserResponse } from '../interface/model.interface';
+import {
+  DocumentDefinition,
+  FilterQuery,
+  QueryOptions,
+  UpdateQuery,
+} from 'mongoose';
+import {
+  IUserInput,
+  IUserModel,
+  IUserDocument,
+} from '../interface/model.interface';
 import UserModel from '../models/user.model';
 
 export async function getAllUsers() {
-  const users: IUserResponse = await UserModel.find()
+  const users: IUserDocument = await UserModel.find()
     .select('-password')
-    .lean<IUserResponse>();
+    .lean<IUserDocument>();
 
   return users;
 }
 
-export async function findUser(username: string) {
-  const user = await UserModel.findOne({ username })
-    .lean<IUserResponse>()
+export async function findUser(query: FilterQuery<IUserModel>) {
+  const user = await UserModel.findOne(query)
+    .select('-password')
+    .lean<IUserDocument>()
     .exec();
 
   return user;
 }
 
 export async function createNewUser(input: DocumentDefinition<IUserModel>) {
-  const salt: string = await bcrypt.genSalt(10);
-  const hashedPassword: string = await bcrypt.hash(input.password, salt);
-
-  const newUser = await UserModel.create({
-    ...input,
-    password: hashedPassword,
-  });
+  const newUser = await UserModel.create({ ...input });
 
   return newUser;
+}
+
+export async function updateUser(
+  query: FilterQuery<IUserDocument>,
+  update: UpdateQuery<IUserInput>,
+  options: QueryOptions = { new: true }
+) {
+  const updatedUser = await UserModel.findOneAndUpdate(query, update, options);
+
+  return updatedUser;
 }

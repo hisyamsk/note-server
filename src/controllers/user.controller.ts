@@ -5,6 +5,7 @@ import { StatusCodes } from 'http-status-codes';
 import { IUserDocument } from '../interface/model.interface';
 import {
   createNewUser,
+  deleteUser,
   findUser,
   getAllUsers,
   updateUser,
@@ -15,6 +16,7 @@ import {
   UpdateUserInput,
 } from '../schema/user.schema';
 import { hashPassword } from '../utils/passwordUtils';
+import { findNotes } from '../service/note.service';
 
 // @desc Get all users
 // @route GET /users
@@ -85,5 +87,27 @@ export const updateUserHandler = asyncHandler(
 // @route DELETE /users
 // @access Private
 export const deleteUserHandler = asyncHandler(
-  async (req: Request<{}, {}, DeleteUsersInput['body']>, res: Response) => {}
+  async (req: Request<{}, {}, DeleteUsersInput['body']>, res: Response) => {
+    const { id } = req.body;
+
+    const notes = await findNotes({ user: id });
+    if (notes.length) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: 'User still has assigned notes' });
+
+      return;
+    }
+
+    const user = await findUser({ _id: id });
+    if (!user) {
+      res.status(StatusCodes.NOT_FOUND).json({ message: 'User not found' });
+
+      return;
+    }
+
+    const deletedUser = await deleteUser({ _id: id });
+
+    res.status(StatusCodes.OK).json(deletedUser);
+  }
 );

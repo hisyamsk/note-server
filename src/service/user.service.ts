@@ -19,7 +19,7 @@ export async function getAllUsers() {
   return users;
 }
 
-export async function findUser(query: FilterQuery<IUserModel>) {
+export async function findUser(query: FilterQuery<IUserDocument>) {
   const user = await UserModel.findOne(query)
     .select('-password')
     .lean<IUserDocument>()
@@ -42,4 +42,10 @@ export async function updateUser(
   const updatedUser = await UserModel.findOneAndUpdate(query, update, options);
 
   return updatedUser;
+}
+
+export async function deleteUser(query: FilterQuery<IUserDocument>) {
+  const deletedUser = await UserModel.deleteOne(query);
+
+  return deletedUser;
 }

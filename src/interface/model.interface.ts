@@ -15,11 +15,19 @@ export interface IUserModel extends IUserInput {
   password: string;
 }
 
-export interface INoteModel {
-  user: IUserDocument['_id'];
+export interface INoteInput {
   title: string;
   text: string;
   completed: boolean;
+}
+
+export interface INoteModel extends INoteInput {
+  _id: mongoose.Schema.Types.ObjectId;
+  user: IUserDocument['_id'];
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface INoteResponse extends INoteModel {
+  username?: IUserInput['username'];
 }

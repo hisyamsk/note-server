@@ -16,7 +16,7 @@ import {
   UpdateUserInput,
 } from '../schema/user.schema';
 import { hashPassword } from '../utils/passwordUtils';
-import { findNotes } from '../service/note.service';
+import { findNote } from '../service/note.service';
 
 // @desc Get all users
 // @route GET /users
@@ -90,8 +90,8 @@ export const deleteUserHandler = asyncHandler(
   async (req: Request<{}, {}, DeleteUsersInput['body']>, res: Response) => {
     const { id } = req.body;
 
-    const notes = await findNotes({ user: id });
-    if (notes.length) {
+    const note = await findNote({ user: id });
+    if (note) {
       res
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: 'User still has assigned notes' });

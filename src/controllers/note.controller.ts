@@ -1,13 +1,18 @@
 import { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import { StatusCodes } from 'http-status-codes';
-import { CreateNoteInput, UpdateNoteInput } from '../schema/note.schema';
+import {
+  CreateNoteInput,
+  DeleteNoteInput,
+  UpdateNoteInput,
+} from '../schema/note.schema';
 import {
   createNewNote,
+  deleteNote,
   findNote,
   findNotesWithAggregate,
+  updateNote,
 } from '../service/note.service';
-import { updateUser } from '../service/user.service';
 
 // @desc Get all notes
 // @route GET /notes
@@ -63,8 +68,28 @@ export const updateNoteHandler = asyncHandler(
       return;
     }
 
-    const updatedUser = await updateUser({ _id: req.body.id }, req.body);
+    const updatedNote = await updateNote({ _id: req.body.id }, req.body);
 
-    res.status(StatusCodes.CREATED).json(updatedUser);
+    res.status(StatusCodes.CREATED).json(updatedNote);
+  }
+);
+
+// @desc Delete existing note
+// @route DELETE /notes
+// @access Private
+export const deleteNoteHandler = asyncHandler(
+  async (req: Request<{}, {}, DeleteNoteInput['body']>, res: Response) => {
+    const isNoteExist = await findNote({ _id: req.body.id });
+    if (!isNoteExist) {
+      res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: `Note with id: ${req.body.id} not found!` });
+
+      return;
+    }
+
+    const deletedNote = await deleteNote({ _id: req.body.id });
+
+    res.status(StatusCodes.CREATED).json(deletedNote);
   }
 );

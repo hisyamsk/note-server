@@ -41,3 +41,9 @@ export async function updateNote(
 
   return updatedNote;
 }
+
+export async function deleteNote(query: FilterQuery<INoteModel>) {
+  const deletedNote = await NoteModel.deleteOne(query);
+
+  return deletedNote;
+}

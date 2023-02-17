@@ -25,5 +25,14 @@ export const updateNoteSchema = object({
   }),
 });
 
+export const deleteNoteSchema = object({
+  body: object({
+    id: string({
+      required_error: 'id field is required',
+    }).min(1, 'id field cannot be empty'),
+  }),
+});
+
 export type CreateNoteInput = TypeOf<typeof createNoteSchema>;
 export type UpdateNoteInput = TypeOf<typeof updateNoteSchema>;
+export type DeleteNoteInput = TypeOf<typeof deleteNoteSchema>;

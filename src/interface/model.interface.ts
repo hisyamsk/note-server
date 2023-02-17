@@ -8,7 +8,7 @@ export interface IUserInput {
 }
 
 export interface IUserDocument extends IUserInput {
-  _id: mongoose.Schema.Types.ObjectId;
+  _id: string;
 }
 
 export interface IUserModel extends IUserInput {
@@ -19,11 +19,11 @@ export interface INoteInput {
   title: string;
   text: string;
   completed: boolean;
+  user: mongoose.Types.ObjectId;
 }
 
 export interface INoteModel extends INoteInput {
-  _id: mongoose.Schema.Types.ObjectId;
-  user: IUserDocument['_id'];
+  _id: string;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -23,12 +23,13 @@ export const getAllNotesHandler = asyncHandler(
       {
         $lookup: {
           from: 'users',
-          localField: 'userId',
+          localField: 'user',
           foreignField: '_id',
-          as: 'username',
+          as: 'user',
+          pipeline: [{ $project: { _id: 1, username: 1 } }],
         },
-        $unwind: '$username',
       },
+      { $unwind: '$user' },
     ]);
     res.status(StatusCodes.OK).json(notesWithUser);
   }

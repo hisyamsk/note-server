@@ -1,6 +1,9 @@
 import { boolean, object, string, TypeOf } from 'zod';
 
 const payloadBody = {
+  user: string({
+    required_error: 'user field is required',
+  }).min(1, 'user field cannot be empty'),
   title: string({
     required_error: 'title field is required',
   }).min(1, 'title field cannot be empty'),

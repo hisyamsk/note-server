@@ -41,12 +41,12 @@ export const createNewUserHandler = asyncHandler(
       return;
     }
     const hashedPassword = await hashPassword(req.body.password);
-    const newUser = await createNewUser({
+    const { _id, username, roles, active } = await createNewUser({
       ...req.body,
       password: hashedPassword,
     });
 
-    res.status(StatusCodes.CREATED).json(newUser);
+    res.status(StatusCodes.CREATED).json({ _id, username, roles, active });
   }
 );
 

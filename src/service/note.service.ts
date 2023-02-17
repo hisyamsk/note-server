@@ -1,4 +1,10 @@
-import { DocumentDefinition, FilterQuery, PipelineStage } from 'mongoose';
+import {
+  DocumentDefinition,
+  FilterQuery,
+  PipelineStage,
+  QueryOptions,
+  UpdateQuery,
+} from 'mongoose';
 import NoteModel from '../models/note.model';
 import {
   INoteInput,
@@ -22,4 +28,16 @@ export async function createNewNote(input: DocumentDefinition<INoteInput>) {
   const newNote = await NoteModel.create({ ...input });
 
   return newNote;
+}
+
+export async function updateNote(
+  query: FilterQuery<INoteModel>,
+  update: UpdateQuery<INoteInput>,
+  options: QueryOptions = { new: true }
+) {
+  const updatedNote = await NoteModel.updateOne(query, update, options)
+    .lean()
+    .exec();
+
+  return updatedNote;
 }

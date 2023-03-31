@@ -4,31 +4,28 @@ import {
   QueryOptions,
   UpdateQuery,
 } from 'mongoose';
-import {
-  IUserInput,
-  IUserModel,
-  IUserDocument,
-} from '../interface/model.interface';
+import { IUserDocument } from '../interface/model.interface';
+import { IUserRequest } from '../interface/request.interface';
+import { IUserResponse } from '../interface/response.interface';
 import UserModel from '../models/user.model';
 
 export async function getAllUsers() {
-  const users: IUserDocument = await UserModel.find()
+  const users = await UserModel.find()
     .select('-password')
-    .lean<IUserDocument>();
+    .lean<IUserResponse[]>();
 
   return users;
 }
 
 export async function findUser(query: FilterQuery<IUserDocument>) {
   const user = await UserModel.findOne(query)
-    .select('-password')
     .lean<IUserDocument>()
     .exec();
 
   return user;
 }
 
-export async function createNewUser(input: DocumentDefinition<IUserModel>) {
+export async function createNewUser(input: DocumentDefinition<IUserRequest>) {
   const newUser = await UserModel.create({ ...input });
 
   return newUser;
@@ -36,12 +33,12 @@ export async function createNewUser(input: DocumentDefinition<IUserModel>) {
 
 export async function updateUser(
   query: FilterQuery<IUserDocument>,
-  update: UpdateQuery<IUserInput>,
+  update: UpdateQuery<IUserRequest>,
   options: QueryOptions = { new: true }
 ) {
   const updatedUser = await UserModel.findOneAndUpdate(query, update, options)
     .select('-password')
-    .lean()
+    .lean<IUserResponse>()
     .exec();
 
   return updatedUser;

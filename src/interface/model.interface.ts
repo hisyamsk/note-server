@@ -1,33 +1,16 @@
-import mongoose from 'mongoose';
+import { INoteRequest, IUserRequest } from './request.interface';
 
-export interface IUserInput {
-  username: string;
-  roles: string[];
-  active: boolean;
-  password?: string;
-}
-
-export interface IUserDocument extends IUserInput {
+export interface IUserDocument extends IUserRequest {
   _id: string;
-}
-
-export interface IUserModel extends IUserInput {
   password: string;
 }
 
-export interface INoteInput {
-  title: string;
-  text: string;
-  completed: boolean;
-  user: mongoose.Types.ObjectId;
+export interface IUserModel extends IUserRequest {
+  password: string;
 }
 
-export interface INoteModel extends INoteInput {
+export interface INoteModel extends INoteRequest {
   _id: string;
   createdAt: Date;
   updatedAt: Date;
-}
-
-export interface INoteResponse extends INoteModel {
-  username?: IUserInput['username'];
 }

@@ -11,7 +11,7 @@ import { INoteResponse } from '../interface/response.interface';
 import { INoteRequest } from '../interface/request.interface';
 
 export async function findNote(query: FilterQuery<INoteModel>) {
-  const notes = await NoteModel.findOne(query).lean().exec();
+  const notes = await NoteModel.findOne(query).lean<INoteResponse>().exec();
 
   return notes;
 }
@@ -34,7 +34,7 @@ export async function updateNote(
   options: QueryOptions = { new: true }
 ) {
   const updatedNote = await NoteModel.updateOne(query, update, options)
-    .lean()
+    .lean<INoteResponse>()
     .exec();
 
   return updatedNote;

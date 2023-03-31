@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import { StatusCodes } from 'http-status-codes';
 
-import { IUserDocument } from '../interface/model.interface';
 import {
   createNewUser,
   deleteUser,
@@ -17,13 +16,14 @@ import {
 } from '../schema/user.schema';
 import { hashPassword } from '../utils/passwordUtils';
 import { findNote } from '../service/note.service';
+import { IUserResponse } from '../interface/response.interface';
 
 // @desc Get all users
 // @route GET /users
 // @access Private
 export const getAllUsersHandler = asyncHandler(
   async (_: Request, res: Response) => {
-    const users: IUserDocument = await getAllUsers();
+    const users: IUserResponse[] = await getAllUsers();
     res.status(StatusCodes.OK).json(users);
   }
 );
@@ -77,7 +77,7 @@ export const updateUserHandler = asyncHandler(
     if (password) {
       body.password = await hashPassword(password);
     }
-    const updatedUser = await updateUser({ _id: id }, body);
+    const updatedUser: IUserResponse = await updateUser({ _id: id }, body);
 
     res.status(StatusCodes.CREATED).json(updatedUser);
   }

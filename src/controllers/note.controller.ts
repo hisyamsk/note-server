@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import { StatusCodes } from 'http-status-codes';
+import { INoteResponse } from '../interface/response.interface';
 import {
   CreateNoteInput,
   DeleteNoteInput,
@@ -19,7 +20,7 @@ import {
 // @access Private
 export const getAllNotesHandler = asyncHandler(
   async (_: Request, res: Response) => {
-    const notesWithUser = await findNotesWithAggregate([
+    const notesWithUser: INoteResponse[] = await findNotesWithAggregate([
       {
         $lookup: {
           from: 'users',
@@ -69,7 +70,10 @@ export const updateNoteHandler = asyncHandler(
       return;
     }
 
-    const updatedNote = await updateNote({ _id: req.body.id }, req.body);
+    const updatedNote: INoteResponse = await updateNote(
+      { _id: req.body.id },
+      req.body
+    );
 
     res.status(StatusCodes.CREATED).json(updatedNote);
   }

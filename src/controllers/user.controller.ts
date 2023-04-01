@@ -101,7 +101,7 @@ export const deleteUserHandler = asyncHandler(
 
     const user = await findUser({ _id: id });
     if (!user) {
-      res.status(StatusCodes.NOT_FOUND).json({ message: 'User not found' });
+      res.status(StatusCodes.NOT_FOUND).json({ message: `user with id:${id} not found!` });
 
       return;
     }

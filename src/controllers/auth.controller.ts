@@ -22,14 +22,14 @@ export const authLoginHandler = asyncHandler(
       return;
     }
     if (!foundUser.active) {
-      res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Unauthorized' });
+      res.sendStatus(StatusCodes.UNAUTHORIZED);
 
       return;
     }
 
     const isPasswordMatch = bcrpyt.compare(password, foundUser.password);
     if (!isPasswordMatch) {
-      res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Unauthorized' });
+      res.sendStatus(StatusCodes.UNAUTHORIZED);
     }
 
     const { accessToken, refreshToken } = generateAuthTokens(foundUser);
@@ -52,7 +52,7 @@ export const authRefreshHandler = asyncHandler(
   async (req: Request, res: Response) => {
     const { cookies } = req;
     if (!cookies?.refreshToken) {
-      res.status(StatusCodes.UNAUTHORIZED).json({ message: 'UNAUTHORIZED' });
+      res.sendStatus(StatusCodes.UNAUTHORIZED);
 
       return;
     }
@@ -63,7 +63,7 @@ export const authRefreshHandler = asyncHandler(
       process.env.REFRESH_TOKEN_SECRET || ''
     );
     if (error) {
-      res.status(StatusCodes.FORBIDDEN).json({ message: 'FORBIDDEN' });
+      res.sendStatus(StatusCodes.FORBIDDEN);
 
       return;
     }
@@ -87,5 +87,18 @@ export const authRefreshHandler = asyncHandler(
 // @route POST /auth/logout
 // @access Public
 export const authLogoutHandler = asyncHandler(
-  async (req: Request, res: Response) => {}
+  async (req: Request, res: Response) => {
+    const { cookies } = req;
+    if (!cookies.refreshToken) {
+      res.sendStatus(StatusCodes.NO_CONTENT);
+      return;
+    }
+
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    });
+    res.sendStatus(StatusCodes.OK);
+  }
 );

@@ -14,7 +14,7 @@ import {
   DeleteUsersInput,
   UpdateUserInput,
 } from '../schema/user.schema';
-import { hashPassword } from '../utils/passwordUtils';
+import { hashPassword } from '../utils/password.util';
 import { findNote } from '../service/note.service';
 import { IUserResponse } from '../interface/response.interface';
 

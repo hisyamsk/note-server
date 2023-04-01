@@ -22,14 +22,20 @@ export const authLoginHandler = asyncHandler(
       return;
     }
     if (!foundUser.active) {
-      res.sendStatus(StatusCodes.UNAUTHORIZED);
+      res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ message: `User: ${foundUser.username} is not active!` });
 
       return;
     }
 
-    const isPasswordMatch = bcrpyt.compare(password, foundUser.password);
+    const isPasswordMatch = await bcrpyt.compare(password, foundUser.password);
     if (!isPasswordMatch) {
-      res.sendStatus(StatusCodes.UNAUTHORIZED);
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: 'Incorrect password' });
+
+      return;
     }
 
     const { accessToken, refreshToken } = generateAuthTokens(foundUser);
@@ -52,7 +58,7 @@ export const authRefreshHandler = asyncHandler(
   async (req: Request, res: Response) => {
     const { cookies } = req;
     if (!cookies?.refreshToken) {
-      res.sendStatus(StatusCodes.UNAUTHORIZED);
+      res.status(StatusCodes.UNAUTHORIZED).json({ message: 'UNAUTHORIZED' });
 
       return;
     }
@@ -63,7 +69,7 @@ export const authRefreshHandler = asyncHandler(
       process.env.REFRESH_TOKEN_SECRET || ''
     );
     if (error) {
-      res.sendStatus(StatusCodes.FORBIDDEN);
+      res.status(StatusCodes.FORBIDDEN).json({ message: 'FORBIDDEN' });
 
       return;
     }
@@ -90,7 +96,7 @@ export const authLogoutHandler = asyncHandler(
   async (req: Request, res: Response) => {
     const { cookies } = req;
     if (!cookies.refreshToken) {
-      res.sendStatus(StatusCodes.NO_CONTENT);
+      res.status(StatusCodes.NO_CONTENT).json({ message: 'NO CONTENT' });
       return;
     }
 
@@ -99,6 +105,6 @@ export const authLogoutHandler = asyncHandler(
       sameSite: 'none',
       secure: true,
     });
-    res.sendStatus(StatusCodes.OK);
+    res.status(StatusCodes.OK).json({ message: 'OK' });
   }
 );

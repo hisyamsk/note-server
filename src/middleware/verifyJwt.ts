@@ -5,7 +5,7 @@ import { verifyToken } from '../utils/jwt.util';
 const verifyJwt = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization || '';
   if (!authHeader.startsWith('Bearer ')) {
-    res.sendStatus(StatusCodes.UNAUTHORIZED);
+    res.status(StatusCodes.UNAUTHORIZED).json({ message: 'UNAUTHORIZED' });
 
     return;
   }
@@ -16,7 +16,7 @@ const verifyJwt = (req: Request, res: Response, next: NextFunction) => {
     process.env.ACCESS_TOKEN_SECRET || ''
   );
   if (error) {
-    res.sendStatus(StatusCodes.FORBIDDEN);
+    res.status(StatusCodes.FORBIDDEN).json({ message: 'FORBIDDEN' });
 
     return;
   }

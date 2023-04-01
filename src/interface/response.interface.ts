@@ -1,4 +1,4 @@
-import { IUserDocument } from './model.interface';
+import { IUserDocument, UserRoles } from './model.interface';
 
 interface INoteUser {
   _id: IUserDocument['_id'];
@@ -8,7 +8,7 @@ interface INoteUser {
 export interface IUserResponse {
   _id: string;
   username: string;
-  roles: string[];
+  roles: UserRoles[];
   active: boolean;
 }
 

@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
+import { UserRoles } from './model.interface';
 
 export interface IUserRequest {
   username: string;
-  roles: string[];
+  roles: UserRoles[];
   active: boolean;
   password?: string;
 }

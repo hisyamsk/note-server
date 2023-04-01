@@ -20,7 +20,7 @@ app.use(cookieParser());
 app.use(cors(corsOptions));
 app.use('/', express.static(path.join(__dirname, '..', 'public')));
 app.use('/', rootRouter);
-app.use('/', authRouter);
+app.use('/auth', authRouter);
 app.use('/api', apiRouter);
 
 app.all('*', (req: Request, res: Response) => {

@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import {
   authLoginHandler,
   authLogoutHandler,
@@ -10,6 +10,7 @@ import { authLoginSchema } from '../../schema/auth.schema';
 
 const authRouter = express.Router();
 
+authRouter.get('/', (req: Request, res: Response) => res.sendStatus(200));
 authRouter.post(
   '/',
   [loginLimiter, validateResource(authLoginSchema)],

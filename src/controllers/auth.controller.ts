@@ -41,7 +41,7 @@ export const authLoginHandler = asyncHandler(
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
 
-    res.status(StatusCodes.OK).json(accessToken);
+    res.status(StatusCodes.OK).json({ accessToken });
   }
 );
 
@@ -79,7 +79,7 @@ export const authRefreshHandler = asyncHandler(
 
     const { accessToken } = generateAuthTokens(foundUser);
 
-    res.status(StatusCodes.OK).json(accessToken);
+    res.status(StatusCodes.OK).json({ accessToken });
   }
 );
 

@@ -10,13 +10,13 @@ export function generateAuthTokens(user: IUserDocument) {
       },
     },
     process.env.ACCESS_TOKEN_SECRET || '',
-    { expiresIn: '1m' }
+    { expiresIn: '15m' }
   );
 
   const refreshToken = jwt.sign(
     { username: user.username },
     process.env.REFRESH_TOKEN_SECRET || '',
-    { expiresIn: '1d' }
+    { expiresIn: '7d' }
   );
 
   return { accessToken, refreshToken };

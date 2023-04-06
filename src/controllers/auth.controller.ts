@@ -60,7 +60,7 @@ export const authRefreshHandler = asyncHandler(
     if (!cookies?.refreshToken) {
       res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ message: 'No refresh token sent, please login' });
+        .json({ message: 'No refresh token sent' });
 
       return;
     }

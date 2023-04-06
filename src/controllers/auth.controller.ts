@@ -58,7 +58,9 @@ export const authRefreshHandler = asyncHandler(
   async (req: Request, res: Response) => {
     const { cookies } = req;
     if (!cookies?.refreshToken) {
-      res.status(StatusCodes.UNAUTHORIZED).json({ message: 'UNAUTHORIZED' });
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: 'No refresh token sent, please login' });
 
       return;
     }
@@ -69,7 +71,9 @@ export const authRefreshHandler = asyncHandler(
       process.env.REFRESH_TOKEN_SECRET || ''
     );
     if (error) {
-      res.status(StatusCodes.FORBIDDEN).json({ message: 'FORBIDDEN' });
+      res
+        .status(StatusCodes.FORBIDDEN)
+        .json({ message: 'Refresh token has expired, please login' });
 
       return;
     }

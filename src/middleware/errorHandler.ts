@@ -20,6 +20,7 @@ const errorHandlerMiddleware = (
 
   res.status(status).json({
     message: err.message,
+    isError: true,
   });
 };
 
